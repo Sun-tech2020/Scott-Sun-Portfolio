@@ -102,18 +102,10 @@ export const CONTENT: SiteContent = {
       icon: "🌟",
       items: [
         {
-          title: { zh: "国际象棋", en: "Chess" },
-          description: { 
-            zh: "上海棋协大师，全国一级棋士", 
-            en: "Shanghai Chess Association Master, National First-Class Player." 
-          },
-          // link: ""
-        },
-        {
           title: { zh: "英语", en: "English" },
           description: { 
-            zh: "托福 104/120，英语可作为工作语言", 
-            en: "TOEFL 104/120, working proficiency." 
+            zh: "托福 104/120，英语可作为工作语言，兼职英文导游", 
+            en: "TOEFL 104/120, working proficiency, part-time English tour guide." 
           },
           link: "https://docs.qq.com/doc/DTHppWVJIWFRPRHV0"
         },
@@ -130,6 +122,22 @@ export const CONTENT: SiteContent = {
           description: { 
             zh: "TOPIK T1 通过", 
             en: "TOPIK T1 certified." 
+          },
+          // link: ""
+        },
+        {
+          title: { zh: "国际象棋", en: "Chess" },
+          description: { 
+            zh: "上海棋协大师，全国一级棋士", 
+            en: "Shanghai Chess Association Master, National First-Class Player." 
+          },
+          // link: ""
+        },
+        {
+          title: { zh: "算命", en: "Fortune-telling" },
+          description: { 
+            zh: "略懂手相和风水", 
+            en: "Basic knowledge of palmistry and Feng Shui." 
           },
           // link: ""
         }
