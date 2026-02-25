@@ -64,7 +64,7 @@ const Layout = ({ children, theme, setTheme, lang, setLang }: {
         {children}
       </main>
       <footer className="p-8 text-center text-[10px] opacity-40 font-mono">
-        © {new Date().getFullYear()} <span className="underline cursor-pointer">Scott's Blog</span> | Visitors: {stats.visitors.toLocaleString()} Views: {stats.views.toLocaleString()}
+        © {new Date().getFullYear()} <span>Scott's Blog</span>
       </footer>
     </div>
   );
@@ -150,9 +150,9 @@ const CategoryPage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
           const content = (
             <>
               <div className="flex justify-between items-start mb-2">
-                <h3 className="text-xl font-bold">{item.title}</h3>
+                <h3 className="text-xl font-bold">{item.title[lang]}</h3>
               </div>
-              <p className="text-sm opacity-60 leading-relaxed">{item.description}</p>
+              <p className="text-sm opacity-60 leading-relaxed">{item.description[lang]}</p>
             </>
           );
           
@@ -170,9 +170,15 @@ const CategoryPage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
               transition={{ delay: idx * 0.1 }}
             >
               {item.link ? (
-                <a href={item.link} target="_blank" rel="noopener noreferrer" className={className}>
-                  {content}
-                </a>
+                item.link.startsWith('/') ? (
+                  <Link to={item.link} className={className}>
+                    {content}
+                  </Link>
+                ) : (
+                  <a href={item.link} target="_blank" rel="noopener noreferrer" className={className}>
+                    {content}
+                  </a>
+                )
               ) : (
                 <div className={className}>
                   {content}

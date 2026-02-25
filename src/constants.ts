@@ -15,11 +15,23 @@ export const CONTENT: SiteContent = {
       title: { zh: "独立开发者", en: "Independent Developer" },
       icon: "🛠️",
       items: [
+         {
+          title: { zh: "个人网站", en: "Personal Website" },
+          description: { 
+            zh: "基于 React, Vite 和 Tailwind CSS 构建的个人网站", 
+            en: "Personal website built with React, Vite, and Tailwind CSS." 
+          },
+          link: "/"
+        },
         {
-          title: "圣诞树",
-          description: "A beautiful interactive 3D Christmas tree project.",
+          title: { zh: "圣诞树", en: "Christmas Tree" },
+          description: { 
+            zh: "一个精美的交互式 3D 圣诞树项目", 
+            en: "A beautiful interactive 3D Christmas tree project." 
+          },
           link: "https://tree.blackboxo.top/"
         }
+       
       ]
     },
     {
@@ -28,18 +40,27 @@ export const CONTENT: SiteContent = {
       icon: "📊",
       items: [
         {
-          title: "数据科学与数据分析",
-          description: "Data Science and Data Analysis portfolio.",
+          title: { zh: "数据科学与数据分析", en: "Data Science & Analysis" },
+          description: { 
+            zh: "数据科学与数据分析作品集", 
+            en: "Data Science and Data Analysis portfolio." 
+          },
           link: "https://docs.qq.com/doc/DTFV2UGNIdk5zSG1x?no_promotion=1"
         },
         {
-          title: "数学建模",
-          description: "Mathematical Modeling projects and research.",
+          title: { zh: "数学建模", en: "Mathematical Modeling" },
+          description: { 
+            zh: "数学建模项目与研究", 
+            en: "Mathematical Modeling projects and research." 
+          },
           link: "https://docs.qq.com/doc/DTHdiQ2tiSHJwR25a"
         },
         {
-          title: "大学数学及数学竞赛",
-          description: "University Mathematics and Competition achievements.",
+          title: { zh: "大学数学及数学竞赛", en: "University Math & Competitions" },
+          description: { 
+            zh: "大学数学学习及竞赛辅导", 
+            en: "University Mathematics and Competition achievements." 
+          },
           link: "https://docs.qq.com/doc/DTGFuZ2FheWNKbVh2"
         }
       ]
@@ -50,18 +71,27 @@ export const CONTENT: SiteContent = {
       icon: "📈",
       items: [
         {
-          title: "经济学",
-          description: "Economics research and analysis.",
+          title: { zh: "经济学", en: "Economics" },
+          description: { 
+            zh: "经济学研究与分析", 
+            en: "Economics research and analysis." 
+          },
           link: "https://docs.qq.com/doc/DTE5YZUVrSXpOS3RT"
         },
         {
-          title: "CFA",
-          description: "Chartered Financial Analyst program progress and notes.",
+          title: { zh: "CFA", en: "CFA" },
+          description: { 
+            zh: "特许金融分析师持证人", 
+            en: "Chartered Financial Analyst charterholder." 
+          },
           link: "https://docs.qq.com/doc/DTHZIWkVBa1RUT2Rx"
         },
         {
-          title: "FRM",
-          description: "Financial Risk Manager certification materials.",
+          title: { zh: "FRM", en: "FRM" },
+          description: { 
+            zh: "金融风险管理师持证人", 
+            en: "Financial Risk Manager charterholder." 
+          },
           link: "https://docs.qq.com/doc/DTFRCRmhzUVJtWnRK"
         }
       ]
@@ -72,23 +102,35 @@ export const CONTENT: SiteContent = {
       icon: "🌟",
       items: [
         {
-          title: "国际象棋",
-          description: "上海棋协大师，全国一级棋士",
+          title: { zh: "国际象棋", en: "Chess" },
+          description: { 
+            zh: "上海棋协大师，全国一级棋士", 
+            en: "Shanghai Chess Association Master, National First-Class Player." 
+          },
           // link: ""
         },
         {
-          title: "英语",
-          description: "TOEFL 104/120, working proficiency.",
+          title: { zh: "英语", en: "English" },
+          description: { 
+            zh: "托福 104/120，英语可作为工作语言", 
+            en: "TOEFL 104/120, working proficiency." 
+          },
           link: "https://docs.qq.com/doc/DTHppWVJIWFRPRHV0"
         },
         {
-          title: "日语",
-          description: "TOPIK N5 certified.",
+          title: { zh: "日语", en: "Japanese" },
+          description: { 
+            zh: "JLPT N5 通过", 
+            en: "JLPT N5 certified." 
+          },
           // link: ""
         },
         {
-          title: "韩语",
-          description: "TOPIK T1 certified.",
+          title: { zh: "韩语", en: "Korean" },
+          description: { 
+            zh: "TOPIK T1 通过", 
+            en: "TOPIK T1 certified." 
+          },
           // link: ""
         }
       ]

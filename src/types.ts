@@ -2,8 +2,14 @@ export type Language = 'zh' | 'en';
 export type Theme = 'light' | 'dark';
 
 export interface PortfolioItem {
-  title: string;
-  description: string;
+  title: {
+    zh: string;
+    en: string;
+  };
+  description: {
+    zh: string;
+    en: string;
+  };
   link?: string;
   date?: string;
 }
