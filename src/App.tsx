@@ -72,7 +72,7 @@ const Layout = ({ children, theme, setTheme, lang, setLang }: {
 
 const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
   // const avatarUrl = "https://picsum.photos/seed/kyrie/300/300";
-  const avatarUrl = lang === 'zh' ? "/diamond.png" : "/ruby.png";
+  const avatarUrl = lang === 'zh' ? "diamond.png" : "ruby.png";
 
   return (
     <motion.div 
