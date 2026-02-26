@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } 
 import { motion, AnimatePresence } from 'motion/react';
 import { Sun, Moon, Instagram, Github, Linkedin, Mail, Search, ArrowLeft } from 'lucide-react';
 import { CONTENT } from './constants';
-import { Language, Theme } from './types';
+
+import {diamondImg} from '/diamond.png?url';
+import {rubyImg} from '/ruby.png?url'; 
 
 const Layout = ({ children, theme, setTheme, lang, setLang }: { 
   children: ReactNode, 
@@ -72,7 +74,7 @@ const Layout = ({ children, theme, setTheme, lang, setLang }: {
 
 const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
   // const avatarUrl = "https://picsum.photos/seed/kyrie/300/300";
-  const avatarUrl = lang === 'zh' ? "diamond.png" : "ruby.png";
+  const avatarUrl = lang === 'zh' ? diamondImg : rubyImg;
 
   return (
     <motion.div 
@@ -83,11 +85,20 @@ const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
     >
       <div className="relative mb-8">
         <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-white/20 shadow-xl">
-          <img 
-            src={avatarUrl} 
-            alt="Avatar" 
+          // <img 
+          //   src={avatarUrl} 
+          //   alt="Avatar" 
+          //   className="w-full h-full object-cover"
+          //   // referrerPolicy="no-referrer"
+          // />
+          <motion.img
+            key={avatarUrl}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            src={avatarUrl}
+            alt="Avatar"
             className="w-full h-full object-cover"
-            // referrerPolicy="no-referrer"
           />
         </div>
         <div className="absolute -top-2 -right-2 bg-white text-black text-[10px] px-2 py-1 rounded-full border border-black/10 font-bold rotate-12">
