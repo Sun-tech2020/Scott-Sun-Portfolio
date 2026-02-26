@@ -4,13 +4,17 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Sun, Moon, Instagram, Github, Linkedin, Mail, Search, ArrowLeft } from 'lucide-react';
 import { CONTENT } from './constants';
 import { Language, Theme } from './types';
+import { createClient } from '@supabase/supabase-js';
 
-// 修改为严格的相对路径
-// const diamondImg = "./diamond.png";
-// const rubyImg = "./ruby.png"; 
+// =================================================================
+// 🟢 1. 初始化 Supabase 客户端 (我们会在下一步教你怎么获取这两个值)
+// =================================================================
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-const diamondImg = "https://i-blog.csdnimg.cn/direct/ec1cb058c19649a49e7190103bdf9cde.png";
-const rubyImg = "https://i-blog.csdnimg.cn/direct/48de652213b74daea90519c42d99f99c.png"; 
+const diamondImg = "https://img-blog.csdnimg.cn/你的钻石图片ID.png"; // 请保持你之前的链接
+const rubyImg = "https://img-blog.csdnimg.cn/你的红宝石图片ID.png";    // 请保持你之前的链接
 
 const Layout = ({ children, theme, setTheme, lang, setLang }: { 
   children: ReactNode, 
@@ -22,25 +26,38 @@ const Layout = ({ children, theme, setTheme, lang, setLang }: {
   const [stats, setStats] = useState<{ visitors: number, views: number }>({ visitors: 0, views: 0 });
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const updateAndFetchStats = async () => {
+      // 如果还没配置环境变量，先跳过执行，防止页面报错
+      if (supabaseUrl.includes('placeholder')) return;
+
       try {
-        const isNewVisitor = !sessionStorage.getItem('visited');
-        const response = await fetch('/api/stats/increment', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ isNewVisitor })
+        // 使用 localStorage 来判断是否是独立访客 (UV)
+        const isNewVisitor = !localStorage.getItem('visited_scotts_blog');
+
+        // =================================================================
+        // 🟢 2. 调用 Supabase 数据库中的函数进行统计
+        // =================================================================
+        const { data, error } = await supabase.rpc('increment_page_stats', {
+          is_new_visitor: isNewVisitor
         });
-        const data = await response.json();
-        setStats(data);
+
+        if (error) throw error;
+
+        if (data) {
+          // 将数据库返回的最新统计数据更新到页面上
+          setStats({ visitors: data.visitors, views: data.views });
+        }
+
+        // 如果是新访客，在浏览器打上标记，下次就不算作新 Visitors 了，只加 Views
         if (isNewVisitor) {
-          sessionStorage.setItem('visited', 'true');
+          localStorage.setItem('visited_scotts_blog', 'true');
         }
       } catch (error) {
-        console.error('Failed to fetch stats:', error);
+        console.error('Failed to connect to Supabase stats:', error);
       }
     };
 
-    fetchStats();
+    updateAndFetchStats();
   }, []);
 
   return (
@@ -64,14 +81,24 @@ const Layout = ({ children, theme, setTheme, lang, setLang }: {
             </button>
           </div>
         </div>
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium opacity-70">
-        </nav>
       </header>
       <main className="pt-24 pb-12 px-6 max-w-4xl mx-auto">
         {children}
       </main>
-      <footer className="p-8 text-center text-[10px] opacity-40 font-mono">
-        © {new Date().getFullYear()} <span>Scott's Blog</span>
+
+      {/* ================================================================= */}
+      {/* 🟢 3. 按照你截图的样式更新的底部 Footer */}
+      {/* ================================================================= */}
+      <footer className="p-8 text-center text-[12px] opacity-60 font-mono flex items-center justify-center gap-2 flex-wrap">
+        <span>© {new Date().getFullYear()} </span>
+        <span className="underline decoration-white/20 underline-offset-4">Scott's Blog</span>
+        <span className="opacity-50">|</span>
+        <span>
+          Visitors: {stats.visitors > 0 ? stats.visitors.toLocaleString() : '...'}
+        </span>
+        <span>
+          Views: {stats.views > 0 ? stats.views.toLocaleString() : '...'}
+        </span>
       </footer>
     </div>
   );
@@ -81,7 +108,6 @@ const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
   const [copied, setCopied] = useState(false);
   const email = "sunzhuoqun@sina.com";
   
-  // 这里直接使用顶部定义好的变量
   const avatarUrl = lang === 'zh' ? diamondImg : rubyImg;
 
   const handleEmailClick = () => {
@@ -99,15 +125,6 @@ const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
     >
       <div className="relative mb-8">
         <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-white/20 shadow-xl">
-          // <motion.img
-          //   key={avatarUrl}
-          //   initial={{ opacity: 0 }}
-          //   animate={{ opacity: 1 }}
-          //   transition={{ duration: 0.4 }}
-          //   src={avatarUrl}
-          //   alt="Avatar"
-          //   className="w-full h-full object-cover"
-          // />
           <img
             src={avatarUrl}
             alt="Avatar"
