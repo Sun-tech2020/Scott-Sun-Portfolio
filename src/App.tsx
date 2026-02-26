@@ -3,9 +3,11 @@ import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } 
 import { motion, AnimatePresence } from 'motion/react';
 import { Sun, Moon, Instagram, Github, Linkedin, Mail, Search, ArrowLeft } from 'lucide-react';
 import { CONTENT } from './constants';
+import { Language, Theme } from './types';
 
-import diamondImg from '/diamond.png?url';
-import rubyImg from '/ruby.png?url'; 
+// 修改为严格的相对路径
+const diamondImg = "./diamond.png";
+const rubyImg = "./ruby.png"; 
 
 const Layout = ({ children, theme, setTheme, lang, setLang }: { 
   children: ReactNode, 
@@ -73,8 +75,17 @@ const Layout = ({ children, theme, setTheme, lang, setLang }: {
 };
 
 const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
-  // const avatarUrl = "https://picsum.photos/seed/kyrie/300/300";
+  const [copied, setCopied] = useState(false);
+  const email = "sunzhuoqun@sina.com";
+  
+  // 这里直接使用顶部定义好的变量
   const avatarUrl = lang === 'zh' ? diamondImg : rubyImg;
+
+  const handleEmailClick = () => {
+    navigator.clipboard.writeText(email);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <motion.div 
@@ -85,12 +96,6 @@ const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
     >
       <div className="relative mb-8">
         <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-white/20 shadow-xl">
-          // <img 
-          //   src={avatarUrl} 
-          //   alt="Avatar" 
-          //   className="w-full h-full object-cover"
-          //   // referrerPolicy="no-referrer"
-          // />
           <motion.img
             key={avatarUrl}
             initial={{ opacity: 0 }}
@@ -109,11 +114,32 @@ const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
       <h1 className="text-4xl font-bold mb-2 tracking-tight">{CONTENT.name[lang]}</h1>
       <p className="text-lg opacity-60 mb-6 font-medium">{CONTENT.bio[lang]}</p>
 
-      <div className="flex gap-4 mb-10 opacity-70">
-        <a href="https://www.instagram.com/syy_szq/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform"><Instagram size={20} /></a>
-        <a href="https://github.com/Sun-tech" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform"><Github size={20} /></a>
-        <a href="https://www.linkedin.com/in/scott-sun-bb56b1224/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform"><Linkedin size={20} /></a>
-        <a href="mailto:sunzhuoqun@sina.com" className="hover:scale-110 transition-transform"><Mail size={20} /></a>
+      <div className="flex flex-col items-center gap-4 mb-10">
+        <div className="flex gap-4 opacity-70">
+          <a href="https://www.instagram.com/syy_szq/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform"><Instagram size={20} /></a>
+          <a href="https://github.com/Sun-tech" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform"><Github size={20} /></a>
+          <a href="https://www.linkedin.com/in/scott-sun-bb56b1224/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform"><Linkedin size={20} /></a>
+          <button 
+            onClick={handleEmailClick}
+            className="hover:scale-110 transition-transform cursor-pointer outline-none"
+            title={email}
+          >
+            <Mail size={20} />
+          </button>
+        </div>
+        
+        <AnimatePresence>
+          {copied && (
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="text-[10px] font-mono opacity-50 bg-black/5 dark:bg-white/5 px-3 py-1 rounded-full"
+            >
+              {email} {lang === 'zh' ? '已复制' : 'Copied'}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <div className="flex flex-wrap justify-center gap-3 w-full max-w-2xl">
