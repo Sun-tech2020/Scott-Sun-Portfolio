@@ -6,8 +6,11 @@ import { CONTENT } from './constants';
 import { Language, Theme } from './types';
 
 // 修改为严格的相对路径
-const diamondImg = "./diamond.png";
-const rubyImg = "./ruby.png"; 
+// const diamondImg = "./diamond.png";
+// const rubyImg = "./ruby.png"; 
+
+const diamondImg = "https://i-blog.csdnimg.cn/direct/ec1cb058c19649a49e7190103bdf9cde.png";
+const rubyImg = "https://i-blog.csdnimg.cn/direct/48de652213b74daea90519c42d99f99c.png"; 
 
 const Layout = ({ children, theme, setTheme, lang, setLang }: { 
   children: ReactNode, 
@@ -96,11 +99,16 @@ const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
     >
       <div className="relative mb-8">
         <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-white/20 shadow-xl">
-          <motion.img
-            key={avatarUrl}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4 }}
+          // <motion.img
+          //   key={avatarUrl}
+          //   initial={{ opacity: 0 }}
+          //   animate={{ opacity: 1 }}
+          //   transition={{ duration: 0.4 }}
+          //   src={avatarUrl}
+          //   alt="Avatar"
+          //   className="w-full h-full object-cover"
+          // />
+          <img
             src={avatarUrl}
             alt="Avatar"
             className="w-full h-full object-cover"
