@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Sun, Moon, Instagram, Github, Linkedin, Mail, Search, ArrowLeft } from 'lucide-react';
 import { CONTENT } from './constants';
 
-import {diamondImg} from '/diamond.png?url';
-import {rubyImg} from '/ruby.png?url'; 
+import diamondImg from '/diamond.png?url';
+import rubyImg from '/ruby.png?url'; 
 
 const Layout = ({ children, theme, setTheme, lang, setLang }: { 
   children: ReactNode, 
@@ -113,7 +113,7 @@ const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
         <a href="https://www.instagram.com/syy_szq/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform"><Instagram size={20} /></a>
         <a href="https://github.com/Sun-tech" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform"><Github size={20} /></a>
         <a href="https://www.linkedin.com/in/scott-sun-bb56b1224/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform"><Linkedin size={20} /></a>
-        <a href="sunzhuoqun@sina.com" className="hover:scale-110 transition-transform"><Mail size={20} /></a>
+        <a href="mailto:sunzhuoqun@sina.com" className="hover:scale-110 transition-transform"><Mail size={20} /></a>
       </div>
 
       <div className="flex flex-wrap justify-center gap-3 w-full max-w-2xl">
