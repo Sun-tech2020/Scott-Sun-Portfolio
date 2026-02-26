@@ -13,8 +13,8 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.su
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-const diamondImg = "https://img-blog.csdnimg.cn/你的钻石图片ID.png"; // 请保持你之前的链接
-const rubyImg = "https://img-blog.csdnimg.cn/你的红宝石图片ID.png";    // 请保持你之前的链接
+const diamondImg = "https://i-blog.csdnimg.cn/direct/933dd2f7648246fa88a484cec8e0f34a.png"; 
+const rubyImg = "https://i-blog.csdnimg.cn/direct/604fd4bb7b4a4abe932f4a9d1f0960f7.png";
 
 const Layout = ({ children, theme, setTheme, lang, setLang }: { 
   children: ReactNode, 
@@ -27,16 +27,11 @@ const Layout = ({ children, theme, setTheme, lang, setLang }: {
 
   useEffect(() => {
     const updateAndFetchStats = async () => {
-      // 如果还没配置环境变量，先跳过执行，防止页面报错
       if (supabaseUrl.includes('placeholder')) return;
 
       try {
-        // 使用 localStorage 来判断是否是独立访客 (UV)
         const isNewVisitor = !localStorage.getItem('visited_scotts_blog');
 
-        // =================================================================
-        // 🟢 2. 调用 Supabase 数据库中的函数进行统计
-        // =================================================================
         const { data, error } = await supabase.rpc('increment_page_stats', {
           is_new_visitor: isNewVisitor
         });
@@ -44,11 +39,13 @@ const Layout = ({ children, theme, setTheme, lang, setLang }: {
         if (error) throw error;
 
         if (data) {
-          // 将数据库返回的最新统计数据更新到页面上
-          setStats({ visitors: data.visitors, views: data.views });
+          // 🟢 修复这里的核心逻辑：处理 Supabase 返回的数组结构
+          const result = Array.isArray(data) ? data[0] : data;
+          if (result) {
+            setStats({ visitors: result.visitors, views: result.views });
+          }
         }
 
-        // 如果是新访客，在浏览器打上标记，下次就不算作新 Visitors 了，只加 Views
         if (isNewVisitor) {
           localStorage.setItem('visited_scotts_blog', 'true');
         }
