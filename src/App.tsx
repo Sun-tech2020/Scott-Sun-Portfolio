@@ -71,7 +71,8 @@ const Layout = ({ children, theme, setTheme, lang, setLang }: {
 };
 
 const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
-  const avatarUrl = "https://picsum.photos/seed/kyrie/300/300";
+  // const avatarUrl = "https://picsum.photos/seed/kyrie/300/300";
+  const avatarUrl = lang === 'zh' ? "/diamond.png" : "/ruby.png";
 
   return (
     <motion.div 
@@ -86,7 +87,7 @@ const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
             src={avatarUrl} 
             alt="Avatar" 
             className="w-full h-full object-cover"
-            referrerPolicy="no-referrer"
+            // referrerPolicy="no-referrer"
           />
         </div>
         <div className="absolute -top-2 -right-2 bg-white text-black text-[10px] px-2 py-1 rounded-full border border-black/10 font-bold rotate-12">
