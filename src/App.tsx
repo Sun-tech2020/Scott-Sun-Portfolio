@@ -25,30 +25,86 @@ const Layout = ({ children, theme, setTheme, lang, setLang }: {
 }) => {
   const [stats, setStats] = useState<{ visitors: number, views: number }>({ visitors: 0, views: 0 });
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   const updateAndFetchStats = async () => {
+  //     if (supabaseUrl.includes('placeholder')) return;
+
+  //     try {
+  //       const isNewVisitor = !localStorage.getItem('visited_scotts_blog');
+
+  //       const { data, error } = await supabase.rpc('increment_page_stats', {
+  //         is_new_visitor: isNewVisitor
+  //       });
+
+  //       if (error) throw error;
+
+  //       if (data) {
+  //         // 🟢 修复这里的核心逻辑：处理 Supabase 返回的数组结构
+  //         const result = Array.isArray(data) ? data[0] : data;
+  //         if (result) {
+  //           setStats({ visitors: result.visitors, views: result.views });
+  //         }
+  //       }
+
+  //       if (isNewVisitor) {
+  //         localStorage.setItem('visited_scotts_blog', 'true');
+  //       }
+  //     } catch (error) {
+  //       console.error('Failed to connect to Supabase stats:', error);
+  //     }
+  //   };
+
+  //   updateAndFetchStats();
+  // }, []);
+
+useEffect(() => {
     const updateAndFetchStats = async () => {
       if (supabaseUrl.includes('placeholder')) return;
 
       try {
+        // 🟢 架构开关：true 为方案 A (事件日志)，false 为方案 B (计数器)
+        const USE_EVENT_LOG_MODEL = true; 
+
+        // 1. 准备双写所需的数据
+        let userUuid = localStorage.getItem('scotts_blog_user_uuid');
+        if (!userUuid) {
+          userUuid = crypto.randomUUID(); 
+          localStorage.setItem('scotts_blog_user_uuid', userUuid);
+        }
         const isNewVisitor = !localStorage.getItem('visited_scotts_blog');
 
-        const { data, error } = await supabase.rpc('increment_page_stats', {
-          is_new_visitor: isNewVisitor
-        });
+        // ==========================================
+        // 🚀 2. 核心优化：Fire and Forget (发后即忘)
+        // ==========================================
+        if (USE_EVENT_LOG_MODEL) {
+          // A 作为主力：发请求并等待结果用来展示
+          const { data, error } = await supabase.rpc('log_page_view', { p_user_uuid: userUuid });
+          
+          // B 作为影子：发出去记个账就不管了，绝对不阻塞等待（注意前面没有 await）
+          supabase.rpc('increment_page_stats', { is_new_visitor: isNewVisitor }).catch(e => console.error(e));
 
-        if (error) throw error;
+          if (!error && data) {
+            const result = Array.isArray(data) ? data[0] : data;
+            if (result) setStats({ visitors: result.visitors, views: result.views });
+          }
+        } else {
+          // B 作为主力：发请求并极速返回结果用来展示
+          const { data, error } = await supabase.rpc('increment_page_stats', { is_new_visitor: isNewVisitor });
+          
+          // A 作为影子：发出去偷偷写一行日志，绝对不拖慢 B 的展示（注意前面没有 await）
+          supabase.rpc('log_page_view', { p_user_uuid: userUuid }).catch(e => console.error(e));
 
-        if (data) {
-          // 🟢 修复这里的核心逻辑：处理 Supabase 返回的数组结构
-          const result = Array.isArray(data) ? data[0] : data;
-          if (result) {
-            setStats({ visitors: result.visitors, views: result.views });
+          if (!error && data) {
+            const result = Array.isArray(data) ? data[0] : data;
+            if (result) setStats({ visitors: result.visitors, views: result.views });
           }
         }
 
+        // 3. 记录方案 B 的本地标记
         if (isNewVisitor) {
           localStorage.setItem('visited_scotts_blog', 'true');
         }
+
       } catch (error) {
         console.error('Failed to connect to Supabase stats:', error);
       }
