@@ -58,8 +58,8 @@ export const CONTENT: SiteContent = {
         {
           title: { zh: "大学数学及数学竞赛", en: "University Math & Competitions" },
           description: { 
-            zh: "大学数学学习及竞赛辅导", 
-            en: "University Mathematics and Competition achievements." 
+            zh: "高等数学，高等代数，概率论与数理统计", 
+            en: "Advanced Mathematics, Advanced Algebra, Probability and Mathematical Statistics" 
           },
           link: "https://docs.qq.com/doc/DTGFuZ2FheWNKbVh2"
         }
@@ -70,14 +70,6 @@ export const CONTENT: SiteContent = {
       title: { zh: "金融研究员", en: "Financial Researcher" },
       icon: "📈",
       items: [
-        {
-          title: { zh: "经济学", en: "Economics" },
-          description: { 
-            zh: "经济学研究与分析", 
-            en: "Economics research and analysis." 
-          },
-          link: "https://docs.qq.com/doc/DTE5YZUVrSXpOS3RT"
-        },
         {
           title: { zh: "CFA", en: "CFA" },
           description: { 
@@ -93,6 +85,14 @@ export const CONTENT: SiteContent = {
             en: "Financial Risk Manager charterholder." 
           },
           link: "https://docs.qq.com/doc/DTFRCRmhzUVJtWnRK"
+        },
+                {
+          title: { zh: "经济学", en: "Economics" },
+          description: { 
+            zh: "经济学研究与分析", 
+            en: "Economics research and analysis." 
+          },
+          link: "https://docs.qq.com/doc/DTE5YZUVrSXpOS3RT"
         }
       ]
     },
@@ -101,30 +101,6 @@ export const CONTENT: SiteContent = {
       title: { zh: "爱好与特长", en: "Hobbies & Skills" },
       icon: "🌟",
       items: [
-        {
-          title: { zh: "英语", en: "English" },
-          description: { 
-            zh: "托福 104/120，英语可作为工作语言，兼职英文导游", 
-            en: "TOEFL 104/120, working proficiency, part-time English tour guide." 
-          },
-          link: "https://docs.qq.com/doc/DTHppWVJIWFRPRHV0"
-        },
-        {
-          title: { zh: "日语", en: "Japanese" },
-          description: { 
-            zh: "JLPT N5 通过", 
-            en: "JLPT N5 certified." 
-          },
-          // link: ""
-        },
-        {
-          title: { zh: "韩语", en: "Korean" },
-          description: { 
-            zh: "TOPIK T1 通过", 
-            en: "TOPIK T1 certified." 
-          },
-          // link: ""
-        },
         {
           title: { zh: "国际象棋", en: "Chess" },
           description: { 
@@ -140,6 +116,14 @@ export const CONTENT: SiteContent = {
             en: "Basic knowledge of palmistry and Feng Shui." 
           },
           // link: ""
+        },
+        {
+          title: { zh: "语言", en: "Language" },
+          description: { 
+            zh: "英语可作为工作语言，野生英文导游，托福(104/120)，日语(N5)，韩语(T1)", 
+            en: "English: working proficiency, freelance English tour guide, TOEFL 104/120; Japanese(N5); Korean(T1)." 
+          },
+          link: "https://docs.qq.com/doc/DTHppWVJIWFRPRHV0"
         }
       ]
     }
