@@ -14,11 +14,11 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const diamondImg = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/public/avatars/diamond.mp4"; 
-const rubyImg = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/public/avatars/ruby%20(1).mp4";
+const rubyImg = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/public/avatars/ruby1.mp4";
 const diamondPoster = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/public/avatars/diamond.png";
-const rubyPoster = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/public/avatars/ruby.png";
+const rubyPoster = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/public/avatars/ruby1.png";
 
-// 🟢 针对移动端优化的视频组件 (Senior Expert Version)
+// 🟢 针对移动端优化的视频组件 (Senior Expert Version - Unified Aspect Ratio)
 const VideoAvatar = ({ src, poster }: { src: string, poster: string }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isReady, setIsReady] = useState(false);
@@ -30,27 +30,24 @@ const VideoAvatar = ({ src, poster }: { src: string, poster: string }) => {
     // 0. 重置状态
     setIsReady(false);
 
-    // 1. 强制写入 DOM 属性 (Attribute Enforcement)
-    video.setAttribute('muted', 'true');
-    video.setAttribute('playsinline', 'true');
-    video.setAttribute('webkit-playsinline', 'true');
-    video.setAttribute('autoplay', 'true');
-    
+    // 强制静音和内联播放属性，确保移动端合规
     video.muted = true;
     video.defaultMuted = true;
+    video.setAttribute('playsinline', 'true');
+    video.setAttribute('webkit-playsinline', 'true');
 
     const attemptPlay = () => {
-      // 2. Load First: 强制唤醒媒体引擎
+      // 1. Load First: 强制唤醒媒体引擎
       video.load(); 
       
-      // 3. Triple Play Guarantee: 避开首屏 JS 任务高峰
+      // 2. Timeout Retry: 避开首屏 JS 任务高峰 (100ms & 300ms)
       const t1 = setTimeout(() => {
-        video.play().catch(err => console.warn("Retry 200ms failed:", err));
-      }, 200);
+        video.play().catch(() => {});
+      }, 100);
 
       const t2 = setTimeout(() => {
-        video.play().catch(err => console.warn("Retry 500ms failed:", err));
-      }, 500);
+        video.play().catch(() => {});
+      }, 300);
 
       return () => {
         clearTimeout(t1);
@@ -75,13 +72,19 @@ const VideoAvatar = ({ src, poster }: { src: string, poster: string }) => {
 
   return (
     <div className="w-full h-full relative bg-white">
-      {/* 兜底海报层：确保在视频加载前可见，并在播放后淡出 */}
+      {/* 
+        海报层：由于源文件已经是 1:1，我们不再需要 object-fit 覆盖。
+        它将完美填满容器，并在视频播放后平滑淡出。
+      */}
       <img 
         src={poster} 
         alt="" 
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 z-0 ${isReady ? 'opacity-0' : 'opacity-100'}`}
+        className={`absolute inset-0 w-full h-full block transition-opacity duration-500 z-0 ${isReady ? 'opacity-0' : 'opacity-100'}`}
       />
-      {/* 视频层：初始透明度为 0，监听到播放成功后淡入 */}
+      {/* 
+        视频层：保持样式干净。
+        依靠 onPlaying 事件触发 isReady，实现从海报到视频的丝滑切换。
+      */}
       <video
         ref={videoRef}
         src={src}
@@ -89,7 +92,7 @@ const VideoAvatar = ({ src, poster }: { src: string, poster: string }) => {
         muted
         playsInline
         onPlaying={() => setIsReady(true)}
-        className={`w-full h-full object-cover block relative z-10 transition-opacity duration-700 ${isReady ? 'opacity-100' : 'opacity-0'}`}
+        className={`w-full h-full block relative z-10 transition-opacity duration-500 ${isReady ? 'opacity-100' : 'opacity-0'}`}
       />
     </div>
   );
