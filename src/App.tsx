@@ -15,19 +15,24 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const diamondImg = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/public/avatars/diamond.mp4"; 
 const rubyImg = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/public/avatars/ruby%20(1).mp4";
+const diamondPoster = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/public/avatars/diamond.png";
+const rubyPoster = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/public/avatars/ruby.png";
 
 // 🟢 针对移动端优化的视频组件
-const VideoAvatar = ({ src }: { src: string }) => {
+const VideoAvatar = ({ src, poster }: { src: string, poster: string }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
+    // 🟢 针对移动端优化：强制重新加载并播放
     video.defaultMuted = true;
     video.muted = true;
     
     const attemptPlay = () => {
+      // 强制调用 load() 确保 buffer 激活，解决移动端首次加载空白问题
+      video.load(); 
       video.play().catch(err => {
         console.warn("Video autoplay failed:", err);
       });
@@ -37,7 +42,7 @@ const VideoAvatar = ({ src }: { src: string }) => {
     
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        attemptPlay();
+        video.play().catch(() => {});
       }
     };
 
@@ -51,12 +56,13 @@ const VideoAvatar = ({ src }: { src: string }) => {
       // 🟢 关键修改：使用固定 key 防止组件销毁重建
       key="global-avatar"
       src={src}
+      poster={poster}
       autoPlay
       loop
       muted
       playsInline
       preload="auto"
-      className="w-full h-full object-cover block"
+      className="w-full h-full object-cover block relative z-10"
     />
   );
 };
@@ -218,6 +224,7 @@ const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
   const email = "sunzhuoqun@sina.com";
   
   const avatarUrl = lang === 'zh' ? diamondImg : rubyImg;
+  const avatarPoster = lang === 'zh' ? diamondPoster : rubyPoster;
 
   const handleEmailClick = () => {
     navigator.clipboard.writeText(email);
@@ -233,8 +240,8 @@ const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
       className="flex flex-col items-center justify-center min-h-[70vh] text-center"
     >
       <div className="relative mb-8">
-        <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-white/20 shadow-xl bg-white flex items-center justify-center">
-          <VideoAvatar src={avatarUrl} />
+        <div className="avatar-container w-32 h-32 rounded-full overflow-hidden border-2 border-white/20 shadow-xl bg-white flex items-center justify-center">
+          <VideoAvatar src={avatarUrl} poster={avatarPoster} />
         </div>
         <div className="absolute -top-2 -right-2 bg-white text-black text-[10px] px-2 py-1 rounded-full border border-black/10 font-bold rotate-12">
           ok, fine
