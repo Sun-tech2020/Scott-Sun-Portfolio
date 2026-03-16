@@ -13,8 +13,8 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.su
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-const diamondImg = "https://i-blog.csdnimg.cn/direct/933dd2f7648246fa88a484cec8e0f34a.png"; 
-const rubyImg = "https://i-blog.csdnimg.cn/direct/604fd4bb7b4a4abe932f4a9d1f0960f7.png";
+const diamondImg = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/public/avatars/diamond.mp4"; 
+const rubyImg = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/public/avatars/ruby%20(1).mp4";
 
 const Layout = ({ children, theme, setTheme, lang, setLang }: { 
   children: ReactNode, 
@@ -175,12 +175,15 @@ const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
       className="flex flex-col items-center justify-center min-h-[70vh] text-center"
     >
       <div className="relative mb-8">
-        <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-white/20 shadow-xl">
-          <img
+        <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-white/20 shadow-xl bg-white flex items-center justify-center">
+          <video
+            key={avatarUrl}
             src={avatarUrl}
-            alt="Avatar"
-            className="w-full h-full object-cover"
-            referrerPolicy="no-referrer" 
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover block"
           />
         </div>
         <div className="absolute -top-2 -right-2 bg-white text-black text-[10px] px-2 py-1 rounded-full border border-black/10 font-bold rotate-12">
