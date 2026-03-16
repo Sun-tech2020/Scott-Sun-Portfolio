@@ -18,27 +18,47 @@ const rubyImg = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/publ
 const diamondPoster = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/public/avatars/diamond.png";
 const rubyPoster = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/public/avatars/ruby.png";
 
-// 🟢 针对移动端优化的视频组件
+// 🟢 针对移动端优化的视频组件 (Senior Expert Version)
 const VideoAvatar = ({ src, poster }: { src: string, poster: string }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    // 🟢 针对移动端优化：强制重新加载并播放
-    video.defaultMuted = true;
-    video.muted = true;
+    // 0. 重置状态
+    setIsReady(false);
+
+    // 1. 强制写入 DOM 属性 (Attribute Enforcement)
+    video.setAttribute('muted', 'true');
+    video.setAttribute('playsinline', 'true');
+    video.setAttribute('webkit-playsinline', 'true');
+    video.setAttribute('autoplay', 'true');
     
+    video.muted = true;
+    video.defaultMuted = true;
+
     const attemptPlay = () => {
-      // 强制调用 load() 确保 buffer 激活，解决移动端首次加载空白问题
+      // 2. Load First: 强制唤醒媒体引擎
       video.load(); 
-      video.play().catch(err => {
-        console.warn("Video autoplay failed:", err);
-      });
+      
+      // 3. Triple Play Guarantee: 避开首屏 JS 任务高峰
+      const t1 = setTimeout(() => {
+        video.play().catch(err => console.warn("Retry 200ms failed:", err));
+      }, 200);
+
+      const t2 = setTimeout(() => {
+        video.play().catch(err => console.warn("Retry 500ms failed:", err));
+      }, 500);
+
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
     };
 
-    attemptPlay();
+    const cleanup = attemptPlay();
     
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
@@ -47,23 +67,31 @@ const VideoAvatar = ({ src, poster }: { src: string, poster: string }) => {
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      cleanup?.();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, [src]);
 
   return (
-    <video
-      ref={videoRef}
-      // 🟢 关键修改：使用固定 key 防止组件销毁重建
-      key="global-avatar"
-      src={src}
-      poster={poster}
-      autoPlay
-      loop
-      muted
-      playsInline
-      preload="auto"
-      className="w-full h-full object-cover block relative z-10"
-    />
+    <div className="w-full h-full relative bg-white">
+      {/* 兜底海报层：确保在视频加载前可见，并在播放后淡出 */}
+      <img 
+        src={poster} 
+        alt="" 
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 z-0 ${isReady ? 'opacity-0' : 'opacity-100'}`}
+      />
+      {/* 视频层：初始透明度为 0，监听到播放成功后淡入 */}
+      <video
+        ref={videoRef}
+        src={src}
+        loop
+        muted
+        playsInline
+        onPlaying={() => setIsReady(true)}
+        className={`w-full h-full object-cover block relative z-10 transition-opacity duration-700 ${isReady ? 'opacity-100' : 'opacity-0'}`}
+      />
+    </div>
   );
 };
 
@@ -76,17 +104,20 @@ const Layout = ({ children, theme, setTheme, lang, setLang }: {
 }) => {
   const [stats, setStats] = useState<{ visitors: number, views: number }>({ visitors: 0, views: 0 });
 
-  // 🟢 预加载另一个版本的头像，消除切换延迟
+  // 🟢 预加载优化：同时预加载视频和海报图
   useEffect(() => {
-    const preloadVideo = (url: string) => {
+    const preloadMedia = (url: string, type: 'video' | 'image') => {
       const link = document.createElement('link');
       link.rel = 'preload';
-      link.as = 'video';
+      link.as = type;
       link.href = url;
       document.head.appendChild(link);
     };
-    preloadVideo(diamondImg);
-    preloadVideo(rubyImg);
+    
+    preloadMedia(diamondImg, 'video');
+    preloadMedia(rubyImg, 'video');
+    preloadMedia(diamondPoster, 'image');
+    preloadMedia(rubyPoster, 'image');
   }, []);
 
   // useEffect(() => {
