@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from 'react';
+import { useState, useEffect, useRef, ReactNode } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sun, Moon, Instagram, Github, Linkedin, Mail, Search, ArrowLeft } from 'lucide-react';
@@ -16,6 +16,51 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 const diamondImg = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/public/avatars/diamond.mp4"; 
 const rubyImg = "https://bmdgcropuyywoyrvaijs.supabase.co/storage/v1/object/public/avatars/ruby%20(1).mp4";
 
+// 🟢 针对移动端优化的视频组件
+const VideoAvatar = ({ src }: { src: string }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.defaultMuted = true;
+    video.muted = true;
+    
+    const attemptPlay = () => {
+      video.play().catch(err => {
+        console.warn("Video autoplay failed:", err);
+      });
+    };
+
+    attemptPlay();
+    
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        attemptPlay();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [src]);
+
+  return (
+    <video
+      ref={videoRef}
+      // 🟢 关键修改：使用固定 key 防止组件销毁重建
+      key="global-avatar"
+      src={src}
+      autoPlay
+      loop
+      muted
+      playsInline
+      preload="auto"
+      className="w-full h-full object-cover block"
+    />
+  );
+};
+
 const Layout = ({ children, theme, setTheme, lang, setLang }: { 
   children: ReactNode, 
   theme: Theme, 
@@ -24,6 +69,19 @@ const Layout = ({ children, theme, setTheme, lang, setLang }: {
   setLang: (l: Language) => void 
 }) => {
   const [stats, setStats] = useState<{ visitors: number, views: number }>({ visitors: 0, views: 0 });
+
+  // 🟢 预加载另一个版本的头像，消除切换延迟
+  useEffect(() => {
+    const preloadVideo = (url: string) => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'video';
+      link.href = url;
+      document.head.appendChild(link);
+    };
+    preloadVideo(diamondImg);
+    preloadVideo(rubyImg);
+  }, []);
 
   // useEffect(() => {
   //   const updateAndFetchStats = async () => {
@@ -176,15 +234,7 @@ const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
     >
       <div className="relative mb-8">
         <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-white/20 shadow-xl bg-white flex items-center justify-center">
-          <video
-            key={avatarUrl}
-            src={avatarUrl}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover block"
-          />
+          <VideoAvatar src={avatarUrl} />
         </div>
         <div className="absolute -top-2 -right-2 bg-white text-black text-[10px] px-2 py-1 rounded-full border border-black/10 font-bold rotate-12">
           ok, fine
