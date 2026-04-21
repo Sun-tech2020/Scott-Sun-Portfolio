@@ -257,8 +257,7 @@ const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
   const [copied, setCopied] = useState(false);
   const email = "sunzhuoqun@sina.com";
   
-  const avatarUrl = lang === 'zh' ? diamondImg : rubyImg;
-  const avatarPoster = lang === 'zh' ? diamondPoster : rubyPoster;
+  const avatarUrl = "/diamond.png";
 
   const handleEmailClick = () => {
     navigator.clipboard.writeText(email);
@@ -275,7 +274,12 @@ const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
     >
       <div className="relative mb-8">
         <div className="avatar-container w-32 h-32 rounded-full overflow-hidden border-2 border-white/20 shadow-xl bg-white flex items-center justify-center">
-          <VideoAvatar src={avatarUrl} poster={avatarPoster} />
+          <img 
+            src={avatarUrl} 
+            alt="Avatar" 
+            className="w-full h-full object-cover"
+            referrerPolicy="no-referrer"
+          />
         </div>
         <div className="absolute -top-2 -right-2 bg-white text-black text-[10px] px-2 py-1 rounded-full border border-black/10 font-bold rotate-12">
           ok, fine

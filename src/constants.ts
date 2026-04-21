@@ -15,6 +15,14 @@ export const CONTENT: SiteContent = {
       title: { zh: "独立开发者", en: "Independent Developer" },
       icon: "🛠️",
       items: [
+        {
+          title: { zh: "多米求职", en: "Duomi Career" },
+          description: { 
+            zh: "大厂DS团队出品，名校校招情报站", 
+            en: "Big Tech DS-led hiring for elite graduates." 
+          },
+          link: "https://duomi.sun-tech.dev/#home"
+        },
          {
           title: { zh: "个人网站", en: "Personal Website" },
           description: { 
@@ -30,8 +38,7 @@ export const CONTENT: SiteContent = {
             en: "A beautiful interactive 3D Christmas tree project." 
           },
           link: "https://tree.blackboxo.top/"
-        }
-       
+        }   
       ]
     },
     {
