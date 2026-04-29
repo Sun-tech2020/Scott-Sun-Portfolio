@@ -254,16 +254,17 @@ useEffect(() => {
 };
 
 const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
-  const [copied, setCopied] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<{ text: string, type: 'email' | 'wechat' } | null>(null);
   const email = "sunzhuoqun@sina.com";
+  const wechat = "y8kVX6D5szq";
   
   const avatarUrl = lang === 'zh' ? diamondImg : rubyImg;
   const avatarPoster = lang === 'zh' ? diamondPoster : rubyPoster;
 
-  const handleEmailClick = () => {
-    navigator.clipboard.writeText(email);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopy = (text: string, type: 'email' | 'wechat') => {
+    navigator.clipboard.writeText(text);
+    setCopyStatus({ text, type });
+    setTimeout(() => setCopyStatus(null), 2000);
   };
 
   return (
@@ -287,11 +288,40 @@ const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
 
       <div className="flex flex-col items-center gap-4 mb-10">
         <div className="flex gap-4 opacity-70">
+          <div className="relative group flex items-center">
+        <button 
+          onClick={() => handleCopy(wechat, 'wechat')}
+          className="hover:text-[#07C160] hover:scale-110 transition-all cursor-pointer outline-none"
+        >
+          <svg 
+            viewBox="0 0 24 24" 
+            className="w-5 h-5" 
+            fill="currentColor" // 微信绿通常用 #07C160，或者随系统 currentColor
+          >
+            <path d="M8.288 3.5c-3.834 0-6.938 2.652-6.938 5.923 0 1.828.966 3.463 2.476 4.567l-.63 2.308 2.7-.1.455.289c.58.369 1.25.576 1.937.576.438 0 .866-.084 1.267-.246-.4-.84-.627-1.758-.627-2.73 0-3.33 3.033-6.033 6.772-6.033.284 0 .564.015.84.045C15.656 5.485 12.305 3.5 8.288 3.5zm9.034 5.308c-3.15 0-5.703 2.222-5.703 4.962 0 2.739 2.553 4.962 5.703 4.962.565 0 1.11-.072 1.62-.21l1.65.918-.415-1.517c.92-.816 1.498-1.97 1.498-3.243 0-2.74-2.553-4.962-5.703-4.962z"/>
+          </svg>
+        </button>
+
+        {/* 悬浮二维码预览卡片 */}
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 hidden group-hover:block transition-opacity">
+          <div className="bg-white p-3 rounded-xl shadow-2xl border border-slate-100 flex flex-col items-center">
+            {/* 假设你有二维码组件或图片 */}
+            <div className="w-24 h-24 bg-slate-50 rounded-md mb-2 flex items-center justify-center text-[10px] text-slate-400">
+              QR CODE
+            </div>
+            <span className="text-[12px] text-slate-500 font-medium whitespace-nowrap">
+              点击复制: {wechat}
+            </span>
+            {/* 小箭头 */}
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white rotate-45 border-r border-b border-slate-100"></div>
+          </div>
+        </div>
+      </div>
           <a href="https://www.instagram.com/syy_szq/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform"><Instagram size={20} /></a>
           <a href="https://github.com/Sun-tech" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform"><Github size={20} /></a>
           <a href="https://www.linkedin.com/in/scott-sun-bb56b1224/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform"><Linkedin size={20} /></a>
           <button 
-            onClick={handleEmailClick}
+            onClick={() => handleCopy(email, 'email')}
             className="hover:scale-110 transition-transform cursor-pointer outline-none"
             title={email}
           >
@@ -300,14 +330,14 @@ const HomePage = ({ lang, theme }: { lang: Language, theme: Theme }) => {
         </div>
         
         <AnimatePresence>
-          {copied && (
+          {copyStatus && (
             <motion.div 
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               className="text-[10px] font-mono opacity-50 bg-black/5 dark:bg-white/5 px-3 py-1 rounded-full"
             >
-              {email} {lang === 'zh' ? '已复制' : 'Copied'}
+              {copyStatus.text} {lang === 'zh' ? '已复制' : 'Copied'}
             </motion.div>
           )}
         </AnimatePresence>
