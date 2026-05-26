@@ -96,8 +96,16 @@ export const CONTENT: SiteContent = {
                 {
           title: { zh: "经济学", en: "Economics" },
           description: { 
-            zh: "经济学研究与分析", 
-            en: "Economics research and analysis." 
+            zh: "微观经济学，宏观经济学，计量经济学，博弈论", 
+            en: "Microeconomics, Macroeconomics, Econometrics, Game Theory" 
+          },
+          link: "https://docs.qq.com/doc/DTE5YZUVrSXpOS3RT"
+        },
+                {
+          title: { zh: "金融学", en: "Finance" },
+          description: { 
+            zh: "公司理财，投资学", 
+            en: "Corporate Finance, Investment" 
           },
           link: "https://docs.qq.com/doc/DTE5YZUVrSXpOS3RT"
         }
